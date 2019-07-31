@@ -17,6 +17,7 @@
 #pragma once
 
 #include "../common/OSPCommon.h"
+#include "ospcommon/library.h"
 
 #include <map>
 
@@ -31,10 +32,15 @@ namespace ospray {
 
     // Function pointers corresponding to each subtype.
     static std::map<std::string, creationFunctionPointer> symbolRegistry;
+    static std::map<std::string, std::string> symbolsLibRegistry;
+    static std::map<std::string, void* > libRegistry;
     const auto type_string = stringForType(OSP_TYPE);
+    const auto symsLib = symbolsLibRegistry[type];
 
     // Find the creation function for the subtype if not already known.
-    if (symbolRegistry.count(type) == 0) {
+    if (symbolRegistry.count(type) == 0 ||
+	libRegistry[symsLib] != getLibrary(symsLib)) {
+
       postStatusMsg(2) << "#ospray: trying to look up "
                        << type_string << " type '" << type
                        << "' for the first time";
@@ -46,6 +52,10 @@ namespace ospray {
       // Look for the named function.
       symbolRegistry[type] =
           (creationFunctionPointer)getSymbol(creationFunctionName);
+      symbolsLibRegistry[type] =
+          getSymbolsLibrary(creationFunctionName);
+      libRegistry[symbolsLibRegistry[type]] =
+          getLibrary(symbolsLibRegistry[type]);
 
       // The named function may not be found if the requested subtype is not
       // known.

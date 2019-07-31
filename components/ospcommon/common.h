@@ -89,6 +89,8 @@ namespace ospcommon {
   OSPCOMMON_INTERFACE void loadLibrary(const std::string &name, bool anchor = true);
   OSPCOMMON_INTERFACE void loadDefaultLibrary();
   OSPCOMMON_INTERFACE void *getSymbol(const std::string &name);
+  OSPCOMMON_INTERFACE std::string getSymbolsLibrary(const std::string &name);
+  OSPCOMMON_INTERFACE void *getLibrary(const std::string &name);
 
 #ifdef _WIN32
 #  define osp_snprintf sprintf_s

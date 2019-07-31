@@ -164,6 +164,7 @@ namespace ospcommon {
   {
     for (auto &l : repo)
       delete l.second;
+    repo.clear();
   }
 
   void LibraryRepository::add(const std::string &name, bool anchor)
@@ -181,6 +182,20 @@ namespace ospcommon {
       sym = lib->second->getSymbol(name);
 
     return sym;
+  }
+  std::string LibraryRepository::getSymbolsLibrary(const std::string &name) const
+  {
+    void *sym = nullptr;
+    std::string rlib = "";
+    for (auto lib = repo.cbegin(); sym == nullptr && lib != repo.end(); ++lib)
+    {
+      sym = lib->second->getSymbol(name);
+      rlib = lib->first;
+    }
+
+    if (sym)
+      return rlib;
+    return "";
   }
 
   void LibraryRepository::addDefaultLibrary()
@@ -213,6 +228,13 @@ namespace ospcommon {
   bool LibraryRepository::libraryExists(const std::string &name) const
   {
     return repo.find(name) != repo.end();
+  }
+  void* LibraryRepository::getLibrary(const std::string &name) const
+  {
+    auto lib = repo.find(name);
+    if (lib != repo.end())
+      return lib->second;
+    return nullptr;
   }
 
 }  // namespace ospcommon

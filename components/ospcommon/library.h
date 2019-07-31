@@ -14,6 +14,8 @@
 // limitations under the License.                                           //
 // ======================================================================== //
 
+#pragma once
+
 #include "common.h"
 // std
 #include <map>
@@ -54,10 +56,14 @@ namespace ospcommon {
       /* returns address of a symbol from any library in the repo */
       void* getSymbol(const std::string& sym) const;
 
+      /* returns name of a library in the repo that holds a symbol */
+      std::string getSymbolsLibrary(const std::string& sym) const;
+
       /* add the default library to the repo */
       void addDefaultLibrary();
 
       bool libraryExists(const std::string &name) const;
+      void* getLibrary(const std::string &name) const;
 
     private:
       static std::unique_ptr<LibraryRepository> instance;
