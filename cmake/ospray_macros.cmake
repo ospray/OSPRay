@@ -329,6 +329,10 @@ macro(ospray_find_embree EMBREE_VERSION_REQUIRED)
     message(STATUS "Found Embree v${EMBREE_VERSION}: ${EMBREE_LIBRARY}")
   endif()
 
+  if (EMBREE_STATIC_LIB)
+    # use import target to include full static lib chain
+    set(EMBREE_LIBRARY embree)
+  endif()
   set(EMBREE_LIBRARIES ${EMBREE_LIBRARY})
 
   if ("${EMBREE_VERSION}" STREQUAL "3.6.0")
