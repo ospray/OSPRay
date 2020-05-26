@@ -9,7 +9,7 @@
 #include "ospcommon/memory/IntrusivePtr.h"
 #include "ospcommon/utility/ParameterizedObject.h"
 
-#include "ospray_testing_export.h"
+#include "ospray/ospray_testing/ospray_testing_export.h"
 
 namespace ospray {
 namespace testing {
