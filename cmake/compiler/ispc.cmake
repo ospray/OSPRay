@@ -131,16 +131,13 @@ macro (ispc_compile)
   mark_as_advanced(ISPC_FLAGS_RELEASE)
   set(ISPC_FLAGS_RELWITHDEBINFO "-O2 -g" CACHE STRING "ISPC Release with Debug symbols flags")
   mark_as_advanced(ISPC_FLAGS_RELWITHDEBINFO)
-  if (WIN32 OR "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    set(ISPC_OPT_FLAGS ${ISPC_FLAGS_RELEASE})
-  elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    set(ISPC_OPT_FLAGS ${ISPC_FLAGS_DEBUG})
-  else()
-    set(ISPC_OPT_FLAGS ${ISPC_FLAGS_RELWITHDEBINFO})
-  endif()
-
-  # turn space sparated list into ';' separated list
-  string(REPLACE " " ";" ISPC_OPT_FLAGS "${ISPC_OPT_FLAGS}")
+  set(ISPC_OPT_FLAGS
+    $<IF:$<CONFIG:Debug>,${ISPC_FLAGS_DEBUG},
+    $<IF:$<CONFIG:Release>,${ISPC_FLAGS_RELEASE},
+    ${ISPC_FLAGS_RELWITHDEBINFO}>>
+  )
+  string(REPLACE ";" "" ISPC_OPT_FLAGS "${ISPC_OPT_FLAGS}")
+  string(REPLACE " " "$<SEMICOLON>" ISPC_OPT_FLAGS "${ISPC_OPT_FLAGS}")
 
   if (NOT WIN32)
     list(APPEND ISPC_ADDITIONAL_ARGS --pic)
@@ -207,6 +204,7 @@ macro (ispc_compile)
       ${input}
       DEPENDS ${input} ${deps}
       COMMENT "Building ISPC object ${outdir}/${fname}.dev${ISPC_TARGET_EXT}"
+      COMMAND_EXPAND_LISTS
     )
 
     list(APPEND ISPC_OBJECTS ${results})

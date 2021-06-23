@@ -13,9 +13,6 @@ if(NOT CMAKE_INSTALL_PREFIX)
       CACHE STRING "Final install location." FORCE)
 endif()
 
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
 if (NOT DEPENDENCIES_BUILD_TYPE)
   set(DEPENDENCIES_BUILD_TYPE Release)
 endif()
@@ -170,7 +167,7 @@ endif()
 include(dep_glm)
 
 ## Build main projects ##
-set(DEFAULT_BUILD_COMMAND ${CMAKE_COMMAND} --build . --config ${CMAKE_BUILD_TYPE} ${PARALLEL_JOBS_OPTS})
+set(DEFAULT_BUILD_COMMAND ${CMAKE_COMMAND} --build . --config $<CONFIG> ${PARALLEL_JOBS_OPTS})
 
 if (BUILD_OSPRAY_MODULE_MPI)
   set(OSPRAY_ENABLE_MODULES ON)

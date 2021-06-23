@@ -30,38 +30,6 @@ macro(add_all_subdirectories)
   endforeach(dir ${dirs})
 endmacro()
 
-## Setup CMAKE_BUILD_TYPE to have a default + cycle between options in UI
-macro(ospray_configure_build_type)
-  set(CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo")
-  if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the build type." FORCE)
-  endif()
-  if (WIN32)
-    if (NOT OSPRAY_DEFAULT_CMAKE_CONFIGURATION_TYPES_SET)
-      set(CMAKE_CONFIGURATION_TYPES "${CONFIGURATION_TYPES}"
-          CACHE STRING "List of generated configurations." FORCE)
-      set(OSPRAY_DEFAULT_CMAKE_CONFIGURATION_TYPES_SET ON
-          CACHE INTERNAL "Default CMake configuration types set.")
-    endif()
-  else()
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CONFIGURATION_TYPES})
-  endif()
-
-  if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
-    set(OSPRAY_BUILD_RELEASE        TRUE )
-    set(OSPRAY_BUILD_DEBUG          FALSE)
-    set(OSPRAY_BUILD_RELWITHDEBINFO FALSE)
-  elseif (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    set(OSPRAY_BUILD_RELEASE        FALSE)
-    set(OSPRAY_BUILD_DEBUG          TRUE )
-    set(OSPRAY_BUILD_RELWITHDEBINFO FALSE)
-  else()
-    set(OSPRAY_BUILD_RELEASE        FALSE)
-    set(OSPRAY_BUILD_DEBUG          FALSE)
-    set(OSPRAY_BUILD_RELWITHDEBINFO TRUE )
-  endif()
-endmacro()
-
 # workaround link issues to Embree ISPC exports
 # ISPC only adds the ISA suffix during name mangling (and dynamic dispatch
 # code) when compiling for multiple targets. Thus, when only one OSPRay ISA is
